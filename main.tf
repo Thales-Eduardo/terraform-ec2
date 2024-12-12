@@ -24,4 +24,34 @@ resource "aws_key_pair" "key-pair-shh" {
   #   public_key = var.ssh_pub
 }
 
+resource "aws_vpc" "vpc" {
+  cidr_block       = "10.0.0.0/16"
+  instance_tenancy = "default"
 
+  tags = {
+    Name = "VPC-terraform"
+  }
+}
+
+resource "aws_internet_gateway" "internet_gateway" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name = "internet-gateway-terraform"
+  }
+}
+
+module "ec2-private" {
+  source     = "./modules/ec2-private"
+  vpc_id     = aws_vpc.vpc.id
+  key_name   = aws_key_pair.key-pair-shh.key_name
+  cidr_block = var.cidr_block
+}
+
+module "ec2-public" {
+  source     = "./modules/ec2-public"
+  vpc_id     = aws_vpc.vpc.id
+  key_name   = aws_key_pair.key-pair-shh.key_name
+  gateway_id = aws_internet_gateway.internet_gateway.id
+  cidr_block = var.cidr_block
+}

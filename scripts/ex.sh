@@ -18,22 +18,18 @@ terraform init && terraform fmt && terraform validate && \
  terraform plan -out plan.out && terraform apply plan.out
 
 # conexão com a "vm pública" via ssh
-ssh ec2-user@44.211.220.7
+ssh ec2-user@44.201.223.133
 # verificar conexão da "vm pública" com a "vm privada"
 ping <ip-da-vm-privada>
-
 # criar arquivo na pasta ssh
 cd ~/.ssh && touch ec2
-
 # no seu terminal
 cat ~/.ssh/ec2
-
 # editar arquivo
 # colar a chave privada ec2
 # para salvar edição control + o
 # para sair do editor control + x 
 nano ec2
-
 # altera permissão do arquivo.
 chmod 600 ec2
 
